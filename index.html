@@ -1,0 +1,123 @@
+<!--  
+Code Purpose: This program models a financial scenario where an initial vault of money is subject to daily transformations. 
+Each day, the vault amount is multiplied by the sum of its digits, ensuring that the sum remains a single digit. 
+Additionally, the program calculates and displays the equivalent values of the vault in different currencies
+(EUR and USD) based on specified exchange rates. 
+The goal is to track how the vault's value changes over a specified time period, 
+considering both numerical and word representations of the amount. 
+-->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vault Money Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: linear-gradient(to right, #2980b9, #6dd5fa);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+        }
+        label {
+            font-weight: bold;
+            font-size: 18px;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            margin-left: -10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        #output {
+            margin-top: 20px;
+            font-weight: bold;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Vault Money Calculator</h1>
+        <label for="initialDeposit">Initial Vault Deposit (BDT):</label>
+        <input type="number" id="initialDeposit" placeholder="Enter initial deposit">
+        <label for="timeframe">Timeframe (Days):</label>
+        <input type="number" id="timeframe" placeholder="Enter timeframe">
+        <button onclick="calculate()">Calculate</button>
+        <div id="output"></div>
+    </div>
+
+    <script>
+        function calculate() {
+            const initialDeposit = parseFloat(document.getElementById("initialDeposit").value);
+            const timeframe = parseInt(document.getElementById("timeframe").value);
+            
+            let vault = initialDeposit;
+            let result = "<h2>Results:</h2>";
+
+            for (let i = 0; i < timeframe; i++) {
+                let sum = getSingleDigitSum(vault);
+                vault *= sum;
+
+                result += `<p><strong>Day ${i + 1}:</strong><br>`;
+                result += `<span>Vault (BDT): ${vault.toFixed(2)}_BDT</span><br>`;
+                result += `<span>Vault (EUR): ${numberToWords(vault, "EUR")}</span><br>`;
+                result += `<span>Vault (USD): ${numberToWords(vault, "USD")}</span></p>`;
+            }
+
+            document.getElementById("output").innerHTML = result;
+        }
+
+        function numberToWords(number, currency) {
+            const words = ["", "Thousand", "Million", "Billion", "Trillion", "Quadrillion", "Quintillion"];
+            let i = 0;
+            while (number >= 1000) {
+                number /= 1000;
+                i++;
+            }
+            return `${number.toFixed(2)} ${words[i]}_${currency}`;
+        }
+
+        function getSingleDigitSum(number) {
+            let sum = 0;
+
+            while (number > 0) {
+                sum += number % 10;
+                number = Math.floor(number / 10);
+            }
+
+            if (sum > 9) {
+                return getSingleDigitSum(sum);
+            }
+
+            return sum;
+        }
+    </script>
+</body>
+</html>
